@@ -75,6 +75,9 @@ public class RestMeta extends BaseTransformMeta<Rest, RestData> {
 
   private String applicationType;
 
+  private boolean followRedirects;
+
+
   public static final String[] HTTP_METHODS =
       new String[] {"GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH"};
 
@@ -345,6 +348,7 @@ public class RestMeta extends BaseTransformMeta<Rest, RestData> {
     this.method = HTTP_METHOD_GET;
     this.dynamicMethod = false;
     this.methodFieldName = null;
+    this.followRedirects = false;
     this.preemptive = false;
     this.trustStoreFile = null;
     this.trustStorePassword = null;
@@ -388,6 +392,7 @@ public class RestMeta extends BaseTransformMeta<Rest, RestData> {
   public String getXml() {
     StringBuilder retval = new StringBuilder();
     retval.append("    ").append(XmlHandler.addTagValue("applicationType", applicationType));
+    retval.append("    ").append(XmlHandler.addTagValue("followRedirects", followRedirects));
     retval.append("    ").append(XmlHandler.addTagValue("method", method));
     retval.append("    ").append(XmlHandler.addTagValue("url", url));
     retval.append("    ").append(XmlHandler.addTagValue("urlInField", urlInField));
@@ -460,6 +465,7 @@ public class RestMeta extends BaseTransformMeta<Rest, RestData> {
       throws HopXmlException {
     try {
       applicationType = XmlHandler.getTagValue(transformNode, "applicationType");
+      followRedirects = "Y".equalsIgnoreCase(XmlHandler.getTagValue(transformNode, "followRedirects"));
       method = XmlHandler.getTagValue(transformNode, "method");
       url = XmlHandler.getTagValue(transformNode, "url");
       urlInField = "Y".equalsIgnoreCase(XmlHandler.getTagValue(transformNode, "urlInField"));
@@ -684,6 +690,24 @@ public class RestMeta extends BaseTransformMeta<Rest, RestData> {
    */
   public String getApplicationType() {
     return applicationType;
+  }
+
+  /**
+   * Setter
+   *
+   * @param followRedirects
+   */
+  public void setFollowRedirects(boolean followRedirects) {
+    this.followRedirects = followRedirects;
+  }
+
+  /**
+   * Getter
+   *
+   * @return
+   */
+  public boolean isFollowRedirects() {
+    return followRedirects;
   }
 
   /**

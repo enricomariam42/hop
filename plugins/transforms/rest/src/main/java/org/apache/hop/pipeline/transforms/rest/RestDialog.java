@@ -132,6 +132,8 @@ public class RestDialog extends BaseTransformDialog implements ITransformDialog 
 
   private Button wMatrixGet;
 
+  private Button wFollowRedirects;
+
   public RestDialog(
       Shell parent, IVariables variables, Object in, PipelineMeta pipelineMeta, String sname) {
     super(parent, variables, (BaseTransformMeta) in, pipelineMeta, sname);
@@ -195,6 +197,7 @@ public class RestDialog extends BaseTransformDialog implements ITransformDialog 
     setupMethodNameLine(lsMod, middle, margin, gSettings);
     setupBodyLine(lsMod, middle, margin, gSettings);
     setupAppTypeLine(lsMod, middle, margin, gSettings);
+    setupFollowRedirects(middle, margin, gSettings);
 
     FormData fdSettings = new FormData();
     fdSettings.left = new FormAttachment(0, 0);
@@ -998,6 +1001,32 @@ public class RestDialog extends BaseTransformDialog implements ITransformDialog 
         });
   }
 
+  private void setupFollowRedirects(int middle, int margin, Group gSettings) {
+    // Follow Redirects line
+    Label wlFollowRedirects = new Label(gSettings, SWT.RIGHT);
+    wlFollowRedirects.setText(BaseMessages.getString(PKG, "RestDialog.FollowRedirects.Label"));
+    PropsUi.setLook(wlFollowRedirects);
+    FormData fdLabel = new FormData();
+    fdLabel.left = new FormAttachment(0, 0);
+    fdLabel.top = new FormAttachment(wApplicationType, margin);
+    fdLabel.right = new FormAttachment(middle, -margin);
+    wlFollowRedirects.setLayoutData(fdLabel);
+    wFollowRedirects = new Button(gSettings, SWT.CHECK);
+    PropsUi.setLook(wFollowRedirects);
+    FormData fdButton = new FormData();
+    fdButton.left = new FormAttachment(middle, 0);
+    fdButton.top = new FormAttachment(wlFollowRedirects, 0, SWT.CENTER);
+    fdButton.right = new FormAttachment(100, 0);
+    wFollowRedirects.setLayoutData(fdButton);
+    wFollowRedirects.addSelectionListener(
+            new SelectionAdapter() {
+              @Override
+              public void widgetSelected(SelectionEvent e) {
+                input.setChanged();
+              }
+            });
+  }
+
   private void setupBodyLine(ModifyListener lsMod, int middle, int margin, Group gSettings) {
     // Body Line
     wlBody = new Label(gSettings, SWT.RIGHT);
@@ -1410,6 +1439,8 @@ public class RestDialog extends BaseTransformDialog implements ITransformDialog 
 
     wApplicationType.setText(Const.NVL(input.getApplicationType(), ""));
 
+    wFollowRedirects.setSelection(input.isFollowRedirects());
+
     wFields.setRowNums();
     wFields.optWidth(true);
 
@@ -1462,6 +1493,7 @@ public class RestDialog extends BaseTransformDialog implements ITransformDialog 
     input.setUrlInField(wUrlInField.getSelection());
     input.setBodyField(wBody.getText());
     input.setFieldName(wResult.getText());
+    input.setFollowRedirects(wFollowRedirects.getSelection());
     input.setResultCodeFieldName(wResultCode.getText());
     input.setResponseTimeFieldName(wResponseTime.getText());
     input.setResponseHeaderFieldName(wResponseHeader.getText());
