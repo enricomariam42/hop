@@ -295,7 +295,12 @@ public class Rest extends BaseTransform<RestMeta, RestData> {
       data.config = new ClientConfig();
       data.config.connectorProvider(new ApacheConnectorProvider());
       data.config.property(ClientProperties.REQUEST_ENTITY_PROCESSING, RequestEntityProcessing.BUFFERED);
-      if (meta.isFollowRedirects()) data.config.property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE);
+      if (meta.isFollowRedirects()) {
+        data.config.property(ClientProperties.FOLLOW_REDIRECTS, Boolean.TRUE);
+        if (isDebug()) {
+          logDebug(BaseMessages.getString(PKG, "Rest.Log.FollowRedirects", meta.isFollowRedirects()));
+        }
+      }
       if (!Utils.isEmpty(data.realProxyHost)) {
         // PROXY CONFIGURATION
         data.config.property(ClientProperties.PROXY_URI,"http://"+ data.realProxyHost + ":" + data.realProxyPort);
